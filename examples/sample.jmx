@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <TestPlan guiclass="TestPlanGui" testname="Plan Login" testclass="TestPlan">
+    <hashTree>
+      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testname="Login" testclass="HTTPSamplerProxy">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Argument.arguments">
+            <elementProp name="" elementType="HTTPArgument">
+              <stringProp name="Argument.name">user</stringProp>
+              <stringProp name="Argument.value">admin</stringProp>
+            </elementProp>
+          </collectionProp>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">api.example.com</stringProp>
+        <stringProp name="HTTPSampler.path">/api/login</stringProp>
+        <stringProp name="HTTPSampler.method">POST</stringProp>
+        <stringProp name="HTTPSampler.postBodyRaw">true</stringProp>
+        <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs"/>
+      </HTTPSamplerProxy>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers Login">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <stringProp name="HTTPSampler.BODY">{"user":"admin","pass":"secret"}</stringProp>
+      </hashTree>
+      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testname="Listar usuarios" testclass="HTTPSamplerProxy">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Argument.arguments">
+            <elementProp name="" elementType="HTTPArgument">
+              <stringProp name="Argument.name">page</stringProp>
+              <stringProp name="Argument.value">1</stringProp>
+            </elementProp>
+          </collectionProp>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">api.example.com</stringProp>
+        <stringProp name="HTTPSampler.path">/api/users</stringProp>
+        <stringProp name="HTTPSampler.method">GET</stringProp>
+      </HTTPSamplerProxy>
+      <hashTree/>
+      <HTTPSamplerProxy guiclass="HttpTestSampleGui" testname="Obtener perfil" testclass="HTTPSamplerProxy">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments"/>
+        <stringProp name="HTTPSampler.domain">api.example.com</stringProp>
+        <stringProp name="HTTPSampler.path">/api/profile</stringProp>
+        <stringProp name="HTTPSampler.method">GET</stringProp>
+      </HTTPSamplerProxy>
+      <hashTree/>
+    </hashTree>
+  </TestPlan>
+</jmeterTestPlan>
