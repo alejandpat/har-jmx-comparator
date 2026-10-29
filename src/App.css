@@ -21,6 +21,12 @@ body {
 
 .app { max-width: 100%; margin: 0 auto; padding: 24px; }
 
+/* Neutraliza los colores del template (index.css) para h1-h4 dentro de la app:
+   en modo claro del sistema, --text-h es casi negro y los títulos no se leen. */
+.app h1, .app h2, .app h3, .app h4 {
+  color: var(--text);
+}
+
 .app-header h1 { margin: 0 0 4px; font-size: 1.6rem; }
 .app-header p { margin: 0 0 20px; color: var(--muted); }
 
@@ -363,7 +369,7 @@ tr.detail-row:hover { background: inherit; }
 .drop-info { color: var(--text); font-size: 14px; }
 .drop-error { color: #ff7b7b; margin-top: 8px; font-size: 13px; }
 
-.results-header h2 { margin: 0 0 4px; font-size: 20px; }
+.results-header h2 { margin: 0 0 4px; font-size: 20px; color: var(--text); }
 .results-sub { color: var(--muted); margin: 0 0 12px; }
 
 .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }

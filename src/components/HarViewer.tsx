@@ -4,6 +4,7 @@ import { parseHar } from "../harParser";
 import { extractDomain, isStaticAsset, pathWithQuery } from "../urlFilter";
 import { logError, logInfo, logWarn } from "../logger";
 import { Collapsible } from "./Collapsible";
+import { useLang } from "../i18n";
 
 interface HarViewerProps {
   /** HAR activo (comparte el estado con la pestaña de comparación). */
@@ -250,6 +251,7 @@ function RequestDetail({
   highlight?: string;
   onClose: () => void;
 }) {
+  const { t } = useLang();
   return (
     <div className="request-detail">
       <div className="detail-header">
@@ -259,13 +261,13 @@ function RequestDetail({
           </span>{" "}
           {request.method} {request.rawUrl ?? request.path}
         </h3>
-        <button className="options-toggle" onClick={onClose}>✕ Cerrar</button>
+        <button className="options-toggle" onClick={onClose}>✕ {t("Cerrar")}</button>
       </div>
 
       <div className="detail-columns">
         <div className="detail-col">
-          <h4>Request</h4>
-          <Collapsible title="Query params" summary={`${request.query.length} params`}>
+          <h4>{t("Request")}</h4>
+          <Collapsible title={t("Query params")} summary={`${request.query.length} ${t("params")}`}>
             <PairTable
               title=""
               pairs={request.query.map((q) => ({ name: q.name, value: q.value }))}
@@ -273,7 +275,7 @@ function RequestDetail({
               urlEncoded
             />
           </Collapsible>
-          <Collapsible title="Headers" summary={`${request.headers.length} headers`}>
+          <Collapsible title={t("Headers")} summary={`${request.headers.length} ${t("headers")}`}>
             <PairTable
               title=""
               pairs={request.headers.map((h) => ({ name: h.name, value: h.value }))}
@@ -281,29 +283,29 @@ function RequestDetail({
             />
           </Collapsible>
           {request.body && (
-            <Collapsible title="Body" summary={`${request.body.length} caracteres`}>
+            <Collapsible title={t("Body")} summary={`${request.body.length} ${t("caracteres")}`}>
               <TextBlock text={request.body} highlight={highlight} />
             </Collapsible>
           )}
         </div>
 
         <div className="detail-col">
-          <h4>Response</h4>
+          <h4>{t("Response")}</h4>
           <p className="detail-meta">
             {request.responseMimeType || "—"} · {formatBytes(request.responseSize)} · {formatTime(request.responseTime)}
           </p>
-          <Collapsible title="Headers" summary={`${(request.responseHeaders ?? []).length} headers`}>
+          <Collapsible title={t("Headers")} summary={`${(request.responseHeaders ?? []).length} ${t("headers")}`}>
             <PairTable
               title=""
               pairs={(request.responseHeaders ?? []).map((h) => ({ name: h.name, value: h.value }))}
               highlight={highlight}
             />
           </Collapsible>
-          <Collapsible title="Body" summary={request.responseBody ? `${request.responseBody.length} caracteres` : "no capturado"}>
+          <Collapsible title={t("Body")} summary={request.responseBody ? `${request.responseBody.length} ${t("caracteres")}` : t("no capturado")}>
             {request.responseBody ? (
               <TextBlock text={request.responseBody} mime={request.responseMimeType} highlight={highlight} />
             ) : (
-              <p className="detail-empty">No capturado en el HAR.</p>
+              <p className="detail-empty">{t("No capturado en el HAR.")}</p>
             )}
           </Collapsible>
         </div>
@@ -319,6 +321,7 @@ function RequestDetail({
  * de alcance (request/response) y campo (headers/body) que resalta los matches.
  */
 export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: HarViewerProps) {
+  const { t } = useLang();
   const [search, setSearch] = useState("");
   const [onlyApi, setOnlyApi] = useState(false);
   const [selected, setSelected] = useState<HttpRequest | null>(null);
@@ -466,36 +469,36 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
   return (
     <section className="har-viewer">
       <div className="results-header">
-        <h2>Visor HAR</h2>
+        <h2>{t("Visor HAR")}</h2>
         <p className="results-sub">
           {harFiles.length > 0
-            ? <>{harFiles.length} archivo(s) HAR — {totalRequests} requests en total{harFile ? <> · activo: <strong>{harFile.fileName}</strong></> : null}</>
-            : "Carga uno o varios archivos .har para inspeccionar sus requests en orden"}
+            ? <>{harFiles.length} {t("archivo(s) HAR —")} {totalRequests} {t("requests en total")}{harFile ? <> · {t("activo:")} <strong>{harFile.fileName}</strong></> : null}</>
+            : t("Carga uno o varios archivos .har para inspeccionar sus requests en orden")}
         </p>
         <div className="filters">
           <input
             type="search"
             className="search-input"
-            placeholder="Buscar método o URL…"
+            placeholder={t("Buscar método o URL…")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <button className={onlyApi ? "active" : ""} onClick={() => setOnlyApi((v) => !v)}>
-            🚫 Sin assets
+            🚫 {t("Sin assets")}
           </button>
           <button
             className={domainsOpen || selectedDomains.size > 0 ? "active" : ""}
             onClick={() => setDomainsOpen((v) => !v)}
             disabled={harFiles.length === 0}
           >
-            🌐 Dominios{selectedDomains.size > 0 ? `: ${selectedDomains.size}` : ""}
+            🌐 {t("Dominios")}{selectedDomains.size > 0 ? `: ${selectedDomains.size}` : ""}
           </button>
           <button
             className={searchOpen || activeSearch ? "active" : ""}
             onClick={() => setSearchOpen((v) => !v)}
             disabled={harFiles.length === 0}
           >
-            🔍 Buscar en contenido{activeSearch ? `: "${activeSearch}"` : ""}
+            🔍 {t("Buscar en contenido")}{activeSearch ? `: "${activeSearch}"` : ""}
           </button>
           <label className="viewer-file-label">
             <input
@@ -509,11 +512,11 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
                 e.target.value = "";
               }}
             />
-            📂 Cargar HAR
+            📂 {t("Cargar HAR")}
           </label>
           {harFiles.length > 0 && (
             <button onClick={() => { onFilesChange([]); setSelected(null); setActiveSearch(null); }}>
-              🗑 Quitar todos
+              🗑 {t("Quitar todos")}
             </button>
           )}
         </div>
@@ -521,9 +524,9 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
 
       {domainsOpen && harFiles.length > 0 && (
         <div className="search-dialog domains-dialog">
-          <h4>Filtrar por dominio</h4>
+          <h4>{t("Filtrar por dominio")}</h4>
           {availableDomains.length === 0 ? (
-            <p className="detail-empty">No se detectaron dominios en los HAR cargados.</p>
+            <p className="detail-empty">{t("No se detectaron dominios en los HAR cargados.")}</p>
           ) : (
             <>
               <div className="domain-list">
@@ -550,13 +553,13 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
                 <button
                   onClick={() => setSelectedDomains(new Set(availableDomains.map(([d]) => d)))}
                 >
-                  Todos
+                  {t("Todos")}
                 </button>
-                <button onClick={() => setSelectedDomains(new Set())}>Ninguno</button>
+                <button onClick={() => setSelectedDomains(new Set())}>{t("Ninguno")}</button>
                 <span className="search-option-label">
                   {selectedDomains.size === 0
-                    ? "Mostrando todos los dominios"
-                    : `Mostrando ${selectedDomains.size} dominio(s)`}
+                    ? t("Mostrando todos los dominios")
+                    : `${t("Mostrando")} ${selectedDomains.size} ${t("dominio(s)")}`}
                 </span>
               </div>
             </>
@@ -566,30 +569,30 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
 
       {searchOpen && harFiles.length > 0 && (
         <div className="search-dialog">
-          <h4>Opciones de búsqueda</h4>
+          <h4>{t("Opciones de búsqueda")}</h4>
           <div className="search-option-group">
-            <span className="search-option-label">1. Buscar en:</span>
-            <label><input type="checkbox" checked={scopeRequest} onChange={(e) => setScopeRequest(e.target.checked)} /> Request</label>
-            <label><input type="checkbox" checked={scopeResponse} onChange={(e) => setScopeResponse(e.target.checked)} /> Response</label>
+            <span className="search-option-label">{t("1. Buscar en:")}</span>
+            <label><input type="checkbox" checked={scopeRequest} onChange={(e) => setScopeRequest(e.target.checked)} /> {t("Request")}</label>
+            <label><input type="checkbox" checked={scopeResponse} onChange={(e) => setScopeResponse(e.target.checked)} /> {t("Response")}</label>
           </div>
           <div className="search-option-group">
-            <span className="search-option-label">2. Campo:</span>
-            <label><input type="checkbox" checked={fieldHeaders} onChange={(e) => setFieldHeaders(e.target.checked)} /> Headers</label>
-            <label><input type="checkbox" checked={fieldBody} onChange={(e) => setFieldBody(e.target.checked)} /> Body</label>
+            <span className="search-option-label">{t("2. Campo:")}</span>
+            <label><input type="checkbox" checked={fieldHeaders} onChange={(e) => setFieldHeaders(e.target.checked)} /> {t("Headers")}</label>
+            <label><input type="checkbox" checked={fieldBody} onChange={(e) => setFieldBody(e.target.checked)} /> {t("Body")}</label>
           </div>
           <div className="search-option-group">
             <input
               type="search"
               className="search-input"
-              placeholder="Texto a buscar…"
+              placeholder={t("Texto a buscar…")}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") executeSearch();
               }}
             />
-            <button className="active" onClick={executeSearch}>Buscar</button>
-            <button onClick={clearSearch}>Limpiar</button>
+            <button className="active" onClick={executeSearch}>{t("Buscar")}</button>
+            <button onClick={clearSearch}>{t("Limpiar")}</button>
           </div>
         </div>
       )}
@@ -601,14 +604,14 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
               <div className="viewer-file-header">
                 <h3
                   className={harFile?.fileName === file.fileName ? "active" : ""}
-                  title="Marcar como HAR activo (se comparte con la comparación)"
+                  title={t("Marcar como HAR activo (se comparte con la comparación)")}
                   onClick={() => onSelectFile(harFile?.fileName === file.fileName ? null : file)}
                 >
                   {harFile?.fileName === file.fileName ? "★ " : "☆ "}
                   {file.fileName}
                 </h3>
                 <span className="viewer-file-count">
-                  {file.requests.length} requests · {rows.length} visibles
+                  {file.requests.length} {t("requests")} · {rows.length} {t("visibles")}
                 </span>
                 <button
                   className="options-toggle"
@@ -619,26 +622,26 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
                     if (selected && !rest.some((f) => f.requests.includes(selected))) setSelected(null);
                   }}
                 >
-                  ✕ Quitar
+                  ✕ {t("Quitar")}
                 </button>
               </div>
               <table className="results-table viewer-table">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Estado</th>
-                    <th>Método</th>
-                    <th>Host</th>
-                    <th>URL</th>
-                    <th>Tipo</th>
-                    <th>Tamaño</th>
-                    <th>Tiempo</th>
+                    <th>{t("Estado")}</th>
+                    <th>{t("Método")}</th>
+                    <th>{t("Host")}</th>
+                    <th>{t("URL")}</th>
+                    <th>{t("Tipo")}</th>
+                    <th>{t("Tamaño")}</th>
+                    <th>{t("Tiempo")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="detail-empty">Sin requests que coincidan con el filtro.</td>
+                      <td colSpan={7} className="detail-empty">{t("Sin requests que coincidan con el filtro.")}</td>
                     </tr>
                   )}
                   {rows.map((row) => (
@@ -687,11 +690,11 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
           {activeSearch && (
             <section className="search-results">
               <h3>
-                Resultados de "{activeSearch}" — {totalSearchHits} request(s) con coincidencias en {searchResults.size} archivo(s)
-                <button className="options-toggle" onClick={() => setActiveSearch(null)}>✕ Cerrar</button>
+                {t("Resultados de")} "{activeSearch}" — {totalSearchHits} {t("request(s) con coincidencias en")} {searchResults.size} {t("archivo(s)")}
+                <button className="options-toggle" onClick={() => setActiveSearch(null)}>✕ {t("Cerrar")}</button>
               </h3>
               {searchResults.size === 0 && (
-                <p className="detail-empty">Sin coincidencias con las opciones seleccionadas.</p>
+                <p className="detail-empty">{t("Sin coincidencias con las opciones seleccionadas.")}</p>
               )}
               {[...searchResults.entries()].map(([fileName, hits]) => {
                 const file = harFiles.find((f) => f.fileName === fileName);
@@ -733,7 +736,7 @@ export function HarViewer({ harFile, harFiles, onFilesChange, onSelectFile }: Ha
       ) : (
         <div className="drop-zone viewer-drop" onClick={() => inputRef.current?.click()}>
           <div className="drop-icon">📄</div>
-          <div className="drop-title">Arrastra uno o varios HAR aquí o haz clic para seleccionar</div>
+          <div className="drop-title">{t("Arrastra uno o varios HAR aquí o haz clic para seleccionar")}</div>
         </div>
       )}
     </section>
