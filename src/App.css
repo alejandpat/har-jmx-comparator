@@ -102,6 +102,28 @@ body {
   font-size: 13px;
   color: var(--accent, #4f8cf7);
 }
+.about-contact {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border, #2a3040);
+}
+.about-contact h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--text);
+}
+.about-contact p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.about-contact a {
+  color: var(--accent, #4f8cf7);
+  text-decoration: none;
+}
+.about-contact a:hover {
+  text-decoration: underline;
+}
 
 /* Panel de configuración */
 .settings-panel {

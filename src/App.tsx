@@ -296,6 +296,17 @@ export default function App() {
           <p className="about-note">
             {t("Todo se procesa localmente en tu navegador: ningún archivo sale de tu equipo.")}
           </p>
+          <div className="about-contact">
+            <h3>{t("📬 Contact me")}</h3>
+            <p>
+              {t("¿Dudas, sugerencias o bugs? Abre un issue en GitHub:")}{" "}
+              <a href="https://github.com/alejandpat/har-jmx-comparator/issues" target="_blank" rel="noreferrer">
+                {t("Reportar en GitHub Issues")}
+              </a>
+              {" · "}
+              <a href="https://github.com/alejandpat" target="_blank" rel="noreferrer">GitHub</a>
+            </p>
+          </div>
         </section>
       )}
 

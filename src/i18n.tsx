@@ -20,8 +20,7 @@ const EN: Record<string, string> = {
   "⚙️ Configuración": "⚙️ Settings",
 
   // About
-  "¿Qué puede hacer esta aplicación?": "What can this application do?",
-  "Comparar JMX ↔ HAR:": "Compare JMX ↔ HAR:",
+  "¿Qué puede hacer esta aplicación?": "What can this application do?",  "Comparar JMX ↔ HAR:": "Compare JMX ↔ HAR:",
   "cruza un plan de pruebas de JMeter (.jmx) contra una captura HAR (o viceversa) y reporta requests nuevos, eliminados y modificados, con diff de query params, headers y bodies.":
     "cross-checks a JMeter test plan (.jmx) against a HAR capture (or vice versa) and reports new, removed and modified requests, with query params, headers and bodies diff.",
   "Comparar JMX vs JMX / HAR vs HAR:": "Compare JMX vs JMX / HAR vs HAR:",
@@ -62,6 +61,11 @@ const EN: Record<string, string> = {
   "HAR a comparar": "HAR to compare",
   "Arrastra un archivo aquí o haz clic para seleccionarlo": "Drag a file here or click to select it",
   "Arrastra archivos aquí o haz clic para seleccionarlos": "Drag files here or click to select them",
+
+  "📬 Contact me": "📬 Contact me",
+  "¿Dudas, sugerencias o bugs? Escríbeme:": "Questions, suggestions or bugs? Write to me:",
+  "¿Dudas, sugerencias o bugs? Abre un issue en GitHub:": "Questions, suggestions or bugs? Open an issue on GitHub:",
+  "Reportar en GitHub Issues": "Report on GitHub Issues",
 
   // Comparación principal
   "Archivo base (flujo esperado):": "Base file (expected flow):",
@@ -189,7 +193,7 @@ function readInitialLang(): Lang {
   } catch {
     // localStorage puede no estar disponible (modo privado); se usa el valor por defecto.
   }
-  return "es";
+  return "en";
 }
 
 /** Proveedor de idioma: guarda la preferencia en localStorage y expone t(). */
