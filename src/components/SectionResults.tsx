@@ -153,7 +153,7 @@ export function SectionResultsView({ sections, jmxName, prefixLabel }: SectionRe
                         </h3>
                         <ResultsView
                           result={s.result}
-                          baseName={`JMX: ${s.transaction}`}
+                          baseName={`${t("JMX:")}${s.transaction}`}
                           compareName={s.harFileName}
                         />
                       </div>

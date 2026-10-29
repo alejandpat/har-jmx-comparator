@@ -366,7 +366,7 @@ export default function App() {
                 checked={options.ignoreVariables}
                 onChange={(e) => setOptions({ ...options, ignoreVariables: e.target.checked })}
               />
-              Ignorar variables de JMeter ({"${var}"} → placeholder)
+              {t("Ignorar variables de JMeter")} ({"${var}"} → placeholder)
             </label>
             <label className="option-check">
               <input
@@ -445,12 +445,12 @@ export default function App() {
                 onClick={() => setDomainsOpen((v) => !v)}
                 disabled={harFiles.length === 0}
               >
-                🌐 Dominios{selectedDomains.size > 0 ? `: ${selectedDomains.size}` : ""}
+                🌐 {t("Dominios")}{selectedDomains.size > 0 ? `: ${selectedDomains.size}` : ""}
               </button>
               {domainsOpen && harFiles.length > 0 && (
                 <div className="domains-dialog">
                   {availableDomains.length === 0 ? (
-                    <p className="detail-empty">No se detectaron dominios en los HAR cargados.</p>
+                    <p className="detail-empty">{t("No se detectaron dominios en los HAR cargados.")}</p>
                   ) : (
                     <>
                       <div className="domain-list">
@@ -475,13 +475,13 @@ export default function App() {
                       </div>
                       <div className="search-option-group">
                         <button type="button" onClick={() => setSelectedDomains(new Set(availableDomains.map(([d]) => d)))}>
-                          Todos
+                          {t("Todos")}
                         </button>
-                        <button type="button" onClick={() => setSelectedDomains(new Set())}>Ninguno</button>
+                        <button type="button" onClick={() => setSelectedDomains(new Set())}>{t("Ninguno")}</button>
                         <span className="search-option-label">
                           {selectedDomains.size === 0
-                            ? "Comparando todos los dominios"
-                            : `Comparando ${selectedDomains.size} dominio(s)`}
+                            ? t("Comparando todos los dominios")
+                            : t("Comparando X dominio(s)").replace("X", String(selectedDomains.size))}
                         </span>
                       </div>
                     </>

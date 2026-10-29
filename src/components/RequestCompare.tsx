@@ -4,7 +4,7 @@ import { buildCurl } from "../curlBuilder";
 import { decodeFormBody, decodeParamValue } from "../normalize";
 import { BodyDiff } from "./BodyDiff";
 import { Collapsible } from "./Collapsible";
-import { useLang } from "../i18n";
+import { translateSummary, useLang } from "../i18n";
 
 /** Botón que copia el cURL del request al portapapeles. */
 function CopyCurlButton({ request }: { request: HttpRequest }) {
@@ -88,7 +88,7 @@ function SingleSide({ request, label, badgeText, badgeClass }: { request: HttpRe
 /** Vista comparativa lado a lado de un request (base vs comparado). */
 export function RequestCompare({ diff, baseLabel, compareLabel }: RequestCompareProps) {
   const { base, compare, changes } = diff;
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   // Requests que solo existen en un lado.
   if (!base || !compare) {
@@ -176,7 +176,7 @@ export function RequestCompare({ diff, baseLabel, compareLabel }: RequestCompare
                       <div className="diff-summary">
                         <strong>{t("Por qué difiere:")}</strong>
                         {"\n"}
-                        {c.summary}
+                        {translateSummary(c.summary, lang)}
                       </div>
                     </td>
                   </tr>

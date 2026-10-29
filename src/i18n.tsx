@@ -218,6 +218,11 @@ const EN: Record<string, string> = {
   "Ningún archivo pudo parsearse.": "No file could be parsed.",
   "Arrastra uno o varios HAR aquí o haz clic para seleccionar": "Drag one or more HARs here or click to select",
   "Arrastra el archivo aquí o haz clic para seleccionar": "Drag the file here or click to select",
+
+  // Comparación por secciones / dominios (App.tsx)
+  "JMX:": "JMX: ",
+  "Comparando todos los dominios": "Comparing all domains",
+  "Comparando X dominio(s)": "Comparing X domain(s)",
 };
 
 interface LangContextValue {
@@ -265,4 +270,36 @@ export function useLang(): LangContextValue {
   const ctx = useContext(LangContext);
   if (!ctx) throw new Error("useLang debe usarse dentro de LangProvider");
   return ctx;
+}
+
+/**
+ * Traduce las líneas del resumen semántico de diferencias generado por
+ * diffEngine.ts (que no tiene acceso al contexto de idioma). Aplica patrones
+ * sobre las líneas dinámicas; los valores entre comillas se conservan tal cual.
+ */
+export function translateSummary(text: string, lang: Lang): string {
+  if (lang !== "en") return text;
+  return text
+    .split("\n")
+    .map((line) => {
+      let s = line;
+      // "array con N items (HAR: M) — items comunes idénticos"
+      s = s.replace(
+        /^array con (\d+) items \(HAR: (\d+)\) — items comunes idénticos$/,
+        "array with $1 items (HAR: $2) — common items identical"
+      );
+      // "añadido <valor>"
+      s = s.replace(/^añadido /, "added ");
+      // "eliminado (antes: <valor>)"
+      s = s.replace(/^eliminado \(antes: (.*)\)$/, "removed (was: $1)");
+      // "array de N elemento(s)" (también anidado en "eliminado (antes: …)")
+      s = s.replace(/array de (\d+) elementos?/g, (_m, n) => `array of ${n} item${n === "1" ? "" : "s"}`);
+      // "objeto con N clave(s)" / "objeto vacío" (también anidados)
+      s = s.replace(/objeto con (\d+) claves?/g, (_m, n) => `object with ${n} key${n === "1" ? "" : "s"}`);
+      s = s.replace(/objeto vacío/g, "empty object");
+      // "… y más diferencias (ver body completo)"
+      s = s.replace(/^… y más diferencias \(ver body completo\)$/, "… and more differences (see full body)");
+      return s;
+    })
+    .join("\n");
 }
